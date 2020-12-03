@@ -2,15 +2,17 @@ const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const helmet = require('helmet')
 const bcrypt = require('bcryptjs')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const Joi = require('joi')
 const User = require('./user')
+require('dotenv').config()
 
 const app = express()
 
-mongoose.connect('mongodb://localhost:27017', 
+mongoose.connect(process.env.MONGODB_URL, 
 { useNewUrlParser: true, useUnifiedTopology: true }, () => {
     console.log('Connected to database')
 })
@@ -18,11 +20,8 @@ mongoose.connect('mongodb://localhost:27017',
 // Middlewares
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true
-}))
-
+app.use(cors())
+app.use(helmet())
 
 // Routes
 // Login route
